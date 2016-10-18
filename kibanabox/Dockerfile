@@ -14,13 +14,13 @@ RUN ( mkdir /opt && \
   cd /opt && \
   tar xf /tmp/kibana.tar && \
   rm /tmp/kibana.tar && \
-  rm -rf /opt/kibana-${KIBANA_VERSION}-linux-x64/node && \
-  ln -s /opt/kibana-${KIBANA_VERSION}-linux-x64/bin/kibana /usr/bin/kibana )
+  rm -rf /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node && \
+  ln -s /opt/kibana-${KIBANA_VERSION}-linux-x86_64/bin/kibana /usr/bin/kibana )
 
 # Override the provided node with a Alpine version
 RUN ( apk --update add nodejs && \
-  mkdir -p /opt/kibana-${KIBANA_VERSION}-linux-x64/node/bin && \
-  ln -s /usr/bin/node /opt/kibana-${KIBANA_VERSION}-linux-x64/node/bin/node )
+  mkdir -p /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin && \
+  ln -s /usr/bin/node /opt/kibana-${KIBANA_VERSION}-linux-x86_64/node/bin/node )
 
 # Check how to preconfigure kibana to default to logstash dashboard
 
