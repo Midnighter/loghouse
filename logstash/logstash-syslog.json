@@ -29,7 +29,7 @@ filter {
     }
     mutate {
       remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
-      convert => { "bytes" => "long" }
+      convert => { "bytes" => "integer" }
     }
   }
 }
