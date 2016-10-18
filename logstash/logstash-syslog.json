@@ -16,6 +16,11 @@ filter {
     date {
       match => [ "timestamp", "ISO8601" ]
     }
+    geoip {
+      source => "ip_address"
+      target => "geoip"
+      add_tag => [ "nginx-geoip" ]
+    }
     if !("_grokparsefailure" in [tags]) {
       mutate {
         replace => [ "@source_host", "%{syslog_hostname}" ]
@@ -24,6 +29,7 @@ filter {
     }
     mutate {
       remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
+      convert => { "bytes" => "long" }
     }
   }
 }
