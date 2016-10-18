@@ -3,9 +3,13 @@ FROM alpine
 
 ENV KIBANA_VERSION=4.6.1
 
+RUN apk update
+RUN apk add ca-certificates wget
+RUN update-ca-certificates
+
 # Install Kibana
 RUN ( mkdir /opt && \
-  wget http://download.elastic.co/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x64.tar.gz -O /tmp/kibana.tar.gz && \
+  wget https://download.elastic.co/kibana/kibana/kibana-${KIBANA_VERSION}-linux-x86_64.tar.gz -O /tmp/kibana.tar.gz && \
   gunzip /tmp/kibana.tar.gz && \
   cd /opt && \
   tar xf /tmp/kibana.tar && \
