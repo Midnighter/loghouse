@@ -1,7 +1,7 @@
 # Docker image to run Kibana on nginx based on sirile/kibanabox
 FROM alpine
 
-ENV KIBANA_VERSION=4.5.3
+ENV KIBANA_VERSION=4.6.1
 
 # Install Kibana
 RUN ( mkdir /opt && \
