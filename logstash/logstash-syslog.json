@@ -13,7 +13,7 @@ input {
 filter {
   if [type] == "syslog" {
     grok {
-      match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{NOTSPACE:container_name} (%{NOTSPACE:container_name}\.%{NOTSPACE:stack_name}\.%{NOTSPACE:container_id}|%{NOTSPACE:container_name}) %{POSINT:syslog_pid} - - ((%{IP:ip_address})?( - - )?\[(%{HTTPDATE:timestamp_http}|%{TIMESTAMP_ISO8601:timestamp_http}|(?<timestamp_http>%{MONTHDAY}(/|-)%{MONTH}(/|-)%{YEAR} %{TIME}))\] \"%{WORD:method} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion}\" %{NUMBER:response} (?:%{NUMBER:bytes}|-)( \"(?:%{URI:referrer}|-)\")?( %{QS:agent})?)?" }
+      match => { "message" => "%{TIMESTAMP_ISO8601:timestamp} %{NOTSPACE:container_name} (%{NOTSPACE:container_name}\.%{NOTSPACE:stack_name}\.%{NOTSPACE:container_id}|%{NOTSPACE:container_name}) %{POSINT:syslog_pid} - - ((%{IP:ip_address})?( - - )?\[(%{HTTPDATE:timestamp_http}|%{TIMESTAMP_ISO8601:timestamp_http}|(?<timestamp_http>%{MONTHDAY}(/|-)%{MONTH}(/|-)%{YEAR} %{TIME}))\] \"%{WORD:method} %{URIPATHPARAM:request} HTTP/%{NUMBER:httpversion}\" %{NUMBER:response} (?:%{NUMBER:bytes}|-)( \"(?:%{URI:referrer}|-)\")?( \"%{QS:agent}\")?( \"%{NOTSPACE:http_x_forwarded_for}\")?( %{SECOND:response_time})?)?" }
       add_field => [ "received_at", "%{@timestamp}" ]
       add_field => [ "received_from", "%{host}" ]
     }
@@ -35,6 +35,7 @@ filter {
     mutate {
       remove_field => [ "syslog_hostname", "syslog_message", "syslog_timestamp" ]
       convert => { "bytes" => "integer" }
+      convert => { "response_time" => "float" }
     }
   }
 }
