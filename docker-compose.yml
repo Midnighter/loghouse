@@ -1,17 +1,21 @@
-kibanabox:
-  build: kibanabox
-#  image: dddecaf/kibanabox:e65ffb06159b
+elasticsearch:
+  build: elasticsearch/
   ports:
-    - 5601:5601
-  command: http://app.dd-decaf.eu:9200
+    - "9200:9200"
+    - "9300:9300"
   environment:
-    - LOGSPOUT=ignore
-logbox:
-  build: logstash
-#  image: dddecaf/logstashgst:e65ffb06159b
+    ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+#  volumes:
+#    - /usr/share/elasticsearch/data:/usr/share/elasticsearch/data
+logstash:
+  build: logstash/
+  command: -f /etc/logstash/conf.d/
   ports:
-    - 6666:5000/udp
-    - 9200:9200
+    - "5000:5000"
+kibana:
+  build: kibana/
+  ports:
+    - "5601:5601"
   environment:
     - LOGSPOUT=ignore
 logspout:
