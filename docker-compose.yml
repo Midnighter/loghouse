@@ -13,7 +13,9 @@ logstash:
   ports:
     - "5000:5000"
   environment:
+    - ELASTIC_USER=elastic
     - ELASTIC_PASSWORD
+    - ELASTIC_URL=app.dd-decaf.eu:9200
 kibana:
   build: kibana/
   ports:
@@ -25,5 +27,5 @@ logspout:
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock
   ports:
-    - 8100:8000
+    - "8100:8000"
   command: syslog://app.dd-decaf.eu:6666
