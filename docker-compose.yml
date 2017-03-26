@@ -21,12 +21,14 @@ services:
       - ELASTIC_PASSWORD
       - ELASTIC_URL=app.dd-decaf.eu:9200
   kibana:
-    build:
-      context: kibana/
+    image: docker.elastic.co/kibana/kibana:5.2.2
     ports:
       - "5601:5601"
     environment:
       - LOGSPOUT=ignore
+      - SERVER_PORT=5601
+      - SERVER_HOST="0.0.0.0"
+      - ELASTICSEARCH_URL="http://app.dd-decaf.eu:9200"
   logspout:
     image: gliderlabs/logspout:master
     volumes:
