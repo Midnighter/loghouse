@@ -17,9 +17,9 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - ELASTIC_USER=elastic
-      - ELASTIC_PASSWORD
-      - ELASTIC_URL=app.dd-decaf.eu:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD
+      - ELASTICSEARCH_URL="app.dd-decaf.eu:9200"
   kibana:
     image: docker.elastic.co/kibana/kibana:5.2.2
     ports:
