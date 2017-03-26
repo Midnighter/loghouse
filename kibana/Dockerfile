@@ -1,5 +1,3 @@
-FROM kibana:5
+FROM docker.elastic.co/kibana/kibana:5.2.2
 
 COPY ./config/ /etc/kibana/
-
-RUN kibana-plugin install x-pack
