@@ -6,21 +6,24 @@ services:
       - "9200:9200"
       - "9300:9300"
     environment:
-      - ES_JAVA_OPTS="-Xms1g -Xmx1g -Des.path.conf=/etc/elasticsearch"
-    command: ["-E", "network.host=0.0.0.0",
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - NETWORK_HOST=0.0.0.0
+    command: ["elasticsearch", "-E", "network.host=0.0.0.0",
               "-E", "discovery.zen.minimum_master_nodes=1"]
   #  volumes:
   #    - /usr/share/elasticsearch/data:/usr/share/elasticsearch/data
   logstash:
     build:
       context: logstash/
-    command: -f /etc/logstash/conf.d/
+    command: ["logstash", "-f", "/etc/logstash/conf.d/"]
     ports:
       - "5000:5000"
     environment:
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD
-      - ELASTICSEARCH_URL="app.dd-decaf.eu:9200"
+      - ELASTICSEARCH_PASSWORD=changeme
+      - ELASTICSEARCH_URL=http://localhost:9200
+    depends_on:
+      - elasticsearch
   kibana:
     image: docker.elastic.co/kibana/kibana:5.2.2
     ports:
@@ -28,8 +31,12 @@ services:
     environment:
       - LOGSPOUT=ignore
       - SERVER_PORT=5601
-      - SERVER_HOST="0.0.0.0"
-      - ELASTICSEARCH_URL="app.dd-decaf.eu:9200"
+      - SERVER_HOST=0.0.0.0
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme
+      - ELASTICSEARCH_URL=http://localhost:9200
+    depends_on:
+      - elasticsearch
   logspout:
     image: gliderlabs/logspout:master
     volumes:
