@@ -7,7 +7,8 @@ services:
       - "9300:9300"
     environment:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
-      - NETWORK_HOST=0.0.0.0
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=changeme
     command: ["elasticsearch", "-E", "network.host=0.0.0.0",
               "-E", "discovery.zen.minimum_master_nodes=1"]
   #  volumes:
@@ -18,10 +19,11 @@ services:
     command: ["logstash", "-f", "/etc/logstash/conf.d/"]
     ports:
       - "5000:5000"
+      - "6666:6666"
     environment:
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
-      - ELASTICSEARCH_URL=http://localhost:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       - elasticsearch
   kibana:
@@ -34,7 +36,7 @@ services:
       - SERVER_HOST=0.0.0.0
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=changeme
-      - ELASTICSEARCH_URL=http://localhost:9200
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
     depends_on:
       - elasticsearch
   logspout:
@@ -43,4 +45,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock
     ports:
       - "8100:8000"
-    command: syslog://app.dd-decaf.eu:6666
+    depends_on:
+      - logstash
+    command: syslog://logstash:6666
